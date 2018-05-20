@@ -1,0 +1,123 @@
+{% extends 'index.html' %}
+
+
+    {% block extra-css %}
+            <link href="/static/plugins/dropzone/dropzone.css" rel="stylesheet">
+        <script src="/static/plugins/dropzone/dropzone.js"></script>
+    {% endblock %}
+
+{% block content-container %}
+/
+    <div id="page-title">
+                <h1 class="page-header text-overflow"> host list</h1>
+
+                <!--Searchbox-->
+                <div class="searchbox">
+                    <div class="input-group custom-search-form">
+                        <input type="text" class="form-control" placeholder="Search..">
+                        <span class="input-group-btn">
+                                <button class="text-muted" type="button"><i class="pli-magnifi-glass"></i></button>
+                            </span>
+                    </div>
+                </div>
+            </div>
+
+    <ol class="breadcrumb">
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Library</a></li>
+                <li class="active">主机列表</li>
+            </ol>
+
+        <div id="page-content">
+        {% include 'components/hostgroups.html' %}
+
+        <div class="col-lg-9">
+
+      <div class="panel">
+
+            <div class="panel-heading">
+                <h3 class="panel-title">文件传输</h3>
+            </div>
+
+          <select name="transfer-type" onchange="ToggleUploadEle(this)">
+              <option value="send">发送文件到远程主机</option>
+              <option value="get">从远程主机下载文件</option>
+          </select>
+
+            <form id="filedropzone" action="{% url 'task_file_upload' %}?random_str={{ random_str }}" class="dropzone dz-clickable">
+                    <div class="dz-default dz-message">
+                        <div class="dz-icon">
+                            <i class="demo-pli-upload-to-cloud icon-5x"></i>
+                        </div>
+                        <div>
+                            <span class="dz-text">Drop files to upload</span>
+                            <p class="text-sm text-muted">or click to pick manually</p>
+                        </div>
+                    </div>
+
+                </form>
+
+          
+          <input id="remote_path" type="text" class="form-control" placeholder="远程路径">
+          
+          
+            <div class="panel-body">
+                <button onclick="PostTask('file_transfer')"  class="btn btn-info pull-right">执行</button>
+                <button class="btn btn-danger">终止</button>
+                <a id="file-download-btn" href="" class="hide btn btn-info">下载任务文件到本地</a>
+
+            </div>
+      </div>
+
+        {% include 'components/taskresult.html' %}
+
+        </div>
+
+    </div>
+
+    {% include 'components/multitask_js.html' %}
+
+
+    <script>
+
+        $(document).ready(function () {
+
+            //var myDropzone = new Dropzone("#file_dropzone")
+            Dropzone.options.filedropzone  = {
+              paramName: "file", // The name that will be used to transfer the file
+              maxFilesize: 2, // MB
+              maxFiles:2,
+              accept: function(file, done) {
+                if (file.name == "test.jpg") {
+                  done("Naha, you don't.");
+                }
+                else { done(); }
+              }
+        };
+        })
+
+        function ToggleUploadEle(self) {
+            if($(self).val() == 'get'){
+                $(self).next().addClass("hide")
+            }
+            else {
+                $(self).next().removeClass('hide')
+            }
+        }
+
+
+
+    </script>
+
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
